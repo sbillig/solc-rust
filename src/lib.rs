@@ -37,11 +37,8 @@ pub fn license() -> String {
 pub fn compile(input: &str) -> String {
     let input_cstr = CString::new(input).expect("CString failed (input contains a 0 byte?)");
     unsafe {
-        let ptr = native::solidity_compile(
-            input_cstr.as_ptr() as *const i8,
-            None,
-            std::ptr::null_mut(),
-        );
+        let ptr =
+            native::solidity_compile(input_cstr.as_ptr() as *const i8, None, std::ptr::null_mut());
         let output_cstr = CStr::from_ptr(ptr).to_string_lossy().into_owned();
         native::solidity_free(ptr);
         native::solidity_reset();
