@@ -9,10 +9,14 @@
 //!     assert_ne!(output.len(), 0);
 //! }
 
+#[macro_use]
+extern crate lazy_static;
+
 mod native;
 
 use std::ffi::CStr;
 use std::ffi::CString;
+use std::sync::Mutex;
 
 /// Returns the compiler version string.
 pub fn version() -> String {
@@ -32,10 +36,18 @@ pub fn license() -> String {
     }
 }
 
+// Lock access to compiler
+lazy_static! {
+    static ref SOLC_MUTEX: Mutex<()> = Mutex::new(());
+}
+
 /// Compile using a valid JSON input and return a JSON output.
 // FIXME support read callback
 pub fn compile(input: &str) -> String {
     let input_cstr = CString::new(input).expect("CString failed (input contains a 0 byte?)");
+    let _lock = SOLC_MUTEX
+        .lock()
+        .expect("Could not acquire exclusive access to the compiler");
     unsafe {
         let ptr =
             native::solidity_compile(input_cstr.as_ptr() as *const i8, None, std::ptr::null_mut());
