@@ -14,7 +14,7 @@ fn main() {
         .define("USE_CVC4", "OFF")
         .build();
 
-    for lib in vec!["solc", "solidity", "yul", "langutil", "evmasm", "devcore"] {
+    for lib in vec!["solc", "solidity", "yul", "langutil", "evmasm", "solutil"] {
         println!(
             "cargo:rustc-link-search=native={}/build/lib{}",
             dst.display(),
