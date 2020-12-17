@@ -110,7 +110,7 @@ unsafe fn copy_result_to_solidity_memory(result: &str, target: *mut *mut c_char)
     let contents_size = contents_cstr.as_bytes_with_nul().len();
 
     // The solidity_reset() call in solidity_compile takes care of freeing the memory alloc'd here
-    let contents_ptr: *mut c_char = native::solidity_alloc(contents_size);
+    let contents_ptr: *mut c_char = native::solidity_alloc(contents_size as u64);
     ptr::copy_nonoverlapping(contents_cstr.as_ptr(), contents_ptr, contents_size);
     (*target) = contents_ptr;
 }
