@@ -34,6 +34,7 @@ fn main() {
     println!("cargo:rustc-link-lib=static=jsoncpp");
 
     println!("cargo:rustc-link-search=native=/usr/lib/");
+    println!("cargo:rustc-link-search=native=/usr/lib64/");
     println!("cargo:rustc-link-search=native=/usr/lib/x86_64-linux-gnu/");
     println!("cargo:rustc-link-search=native=/usr/local/lib/");
 
