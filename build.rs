@@ -5,17 +5,27 @@ use cmake::Config;
 
 use std::env;
 use std::path::PathBuf;
+use std::process::Command;
 
 fn main() {
-    let dst = Config::new("solidity")
+    let mut cmake = Config::new("solidity");
+    cmake
         .define("TESTS", "OFF")
         .define("TOOLS", "OFF")
         .define("USE_Z3", "OFF")
         .define("USE_CVC4", "OFF")
-        .define("Boost_USE_STATIC_LIBS",  "ON")
-        .build();
+        .define("Boost_USE_STATIC_LIBS", "ON");
 
-    for lib in vec!["solc", "solidity", "yul", "langutil", "evmasm", "solutil", "smtutil"] {
+    if Command::new("sccache").arg("--version").output().is_ok() {
+        cmake
+            .define("CMAKE_CXX_COMPILER_LAUNCHER", "sccache")
+            .define("CMAKE_C_COMPILER_LAUNCHER", "sccache");
+    }
+    let dst = cmake.build();
+
+    for lib in vec![
+        "solc", "solidity", "yul", "langutil", "evmasm", "solutil", "smtutil",
+    ] {
         println!(
             "cargo:rustc-link-search=native={}/build/lib{}",
             dst.display(),
