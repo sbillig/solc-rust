@@ -11,7 +11,8 @@ fn main() {
         .define("TOOLS", "OFF")
         .define("USE_Z3", "OFF")
         .define("USE_CVC4", "OFF")
-        .define("Boost_USE_STATIC_LIBS", "ON");
+        .define("Boost_USE_STATIC_LIBS", "ON")
+        .cxxflag("-Wno-range-loop-analysis");
 
     if Command::new("sccache").arg("--version").output().is_ok() {
         cmake
